@@ -23,7 +23,7 @@ class NpEncoder(json.JSONEncoder):
 
 class TabularSequentialDataset(Dataset):
     def __init__(self, df: pd.DataFrame, schema: dict, max_seq_len: int = 30,
-                 batch_size: int = 16, device=torch.device('cuda')):
+                 batch_size: int = 16, device=torch.device('cpu')):
         self.schema = schema
         self.dataset = self.seq_pad(df, max_seq_len)
         self.indices = list(self.dataset.index)
@@ -60,7 +60,8 @@ class TabularSequentialDataset(Dataset):
 
 
 class FeaturePreprocessing(nn.Module):
-    def __init__(self, schema: Dict[str, str], hidden_dim: int = 64, training: bool = True):
+    def __init__(self, schema: Dict[str, str], hidden_dim: int = 64,
+                 training: bool = True):
         super(FeaturePreprocessing, self).__init__()
         self.training = training
         self.embedding = dict()
