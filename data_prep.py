@@ -54,7 +54,7 @@ class TabularSequentialDataset(Dataset):
         for col in data.columns:
             array = np.stack(data[col].values, axis=0)
             tensors[col] = torch.tensor(array,
-                                        dtype=torch.int if self.shecma[col]['type'] == 'categorical' else torch.half,
+                                        dtype=torch.int if self.schema[col]['type'] == 'categorical' else torch.half,
                                         device=self.device)
         return tensors
 
