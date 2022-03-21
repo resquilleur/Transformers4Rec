@@ -60,7 +60,7 @@ class TabularSequentialDataset(Dataset):
 
 
 class FeaturePreprocessing(nn.Module):
-    def __init__(self, schema: Dict[str, str], hidden_dim: int=64, training: bool=True):
+    def __init__(self, schema: Dict[str, str], hidden_dim: int = 64, training: bool = True):
         super(FeaturePreprocessing, self).__init__()
         self.training = training
         self.embedding = dict()
@@ -69,8 +69,8 @@ class FeaturePreprocessing(nn.Module):
         self.features_order = list()
         for feat, stats in schema.items():
             if stats['type'] == 'categorical':
-                self.embedding[feat] == nn.Embedding(num_embeddings=stats['max_val']+1,
-                                                     embedding_dim=stats['embedding_dim'])
+                self.embedding[feat] = nn.Embedding(num_embeddings=stats['max_val'] + 1,
+                                                    embedding_dim=stats['embedding_dim'])
                 self.features_dim += stats['embedding_dim']
             else:
                 self.features_dim += 1
