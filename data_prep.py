@@ -21,7 +21,7 @@ class NpEncoder(json.JSONEncoder):
 
 class TabularSequentialDataset(Dataset):
     def __init__(self, df: pd.DataFrame, schema: dict, max_seq_len: int = 30,
-                 batch_size: int = 16, device: str = 'cpu'):
+                 batch_size: int = 16, device=torch.device('cuda')):
         self.schema = schema
         self.dataset = self.seq_pad(df, max_seq_len)
         self.indices = list(self.dataset.index)
