@@ -68,10 +68,12 @@ class FeaturePreprocessing(nn.Module):
         self.hidden_dim = hidden_dim
         self.features_dim = 0
         self.features_order = list()
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         for feat, stats in schema.items():
             if stats['type'] == 'categorical':
                 self.embedding[feat] = nn.Embedding(num_embeddings=stats['max_val'] + 1,
-                                                    embedding_dim=stats['embedding_dim'])
+                                                    embedding_dim=stats['embedding_dim'],
+                                                    device=self.device)
                 self.features_dim += stats['embedding_dim']
             else:
                 self.features_dim += 1
@@ -86,13 +88,8 @@ class FeaturePreprocessing(nn.Module):
         features = []
         for feat in self.features_order:
             if feat in self.embedding.keys():
-                try:
-                    feat_tensor = self.embedding[feat](tensor[feat])
-                    feat_tensor = torch.swapaxes(feat_tensor, axis0=1, axis1=2)
-                except:
-                    print(tensor[feat])
-                    print(self.embedding)
-                    print(feat_tensor)
+                feat_tensor = self.embedding[feat](tensor[feat])
+                feat_tensor = torch.swapaxes(feat_tensor, axis0=1, axis1=2)
             else:
                 feat_tensor = torch.unsqueeze(tensor[feat], dim=1)
             features.append(feat_tensor)
