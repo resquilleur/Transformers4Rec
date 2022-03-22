@@ -86,8 +86,13 @@ class FeaturePreprocessing(nn.Module):
         features = []
         for feat in self.features_order:
             if feat in self.embedding.keys():
-                feat_tensor = self.embedding[feat](tensor[feat])
-                feat_tensor = torch.swapaxes(feat_tensor, axis0=1, axis1=2)
+                try:
+                    feat_tensor = self.embedding[feat](tensor[feat])
+                    feat_tensor = torch.swapaxes(feat_tensor, axis0=1, axis1=2)
+                except:
+                    print(tensor[feat])
+                    print(self.embedding)
+                    print(feat_tensor)
             else:
                 feat_tensor = torch.unsqueeze(tensor[feat], dim=1)
             features.append(feat_tensor)
